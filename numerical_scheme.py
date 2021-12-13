@@ -6,16 +6,16 @@ from PoissonSolver import solve
 class fd_solver():
 
 	def __init__(
-		self, hx, hy, T, tau, 
+		self, hx, hy, T, nt, 
 		Re, Fr, Sc
 	):
 
-		self.hx  = hx
-		self.hy  = hy  
-		self.T   = T
-		self.tau = tau
+		self.hx = hx
+		self.hy = hy  
+		self.T  = T
+		self.nt = nt
 
-		self.n_steps = m.floor(self.T / self.tau) 
+		self.n_steps = self.T / float(self.nt) 
 
 		self.Re = Re
 		self.Fr = Fr
