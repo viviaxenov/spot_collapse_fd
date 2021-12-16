@@ -28,4 +28,4 @@ Re = 100.0  # Reynolds number
 Fr = 0.1  # Froude number
 Sc = 709.2  # Schmidt number
 
-poisson_solver_defaults = {"max_iter": 10000, "batch_size": 7, "eps": 1e-3}
+poisson_solver_defaults = {"max_iter": 5000, "batch_size": 7, "eps": 1e-3}

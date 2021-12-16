@@ -76,7 +76,7 @@ class fd_solver:
         u_p2 = np.pad(u, ((0, 0), (0, 2)), mode="constant")[:, 2:]
         u_p1 = np.pad(u, ((0, 0), (0, 1)), mode="constant")[:, 1:]
         u_n1 = np.pad(u, ((0, 0), (1, 0)), mode="constant")[:, :-1]
-        v_n1 = np.pad(v, ((1, 0), (0, 0)), mode="constant")[:-1]
+        v_n1 = np.pad(v, ((1, 0), (0, 0)), mode="edge")[:-1]
 
         v_avg = (v + v_n1) / 2
         c_v = np.abs(v_avg) * tau / hy
@@ -104,7 +104,7 @@ class fd_solver:
         u_n2 = np.pad(u, ((0, 0), (2, 0)), mode="constant")[:, :-2]
 
         v = np.pad(v, ((0, 0), (1, 0)), mode="constant")[:, :-1]
-        v_n1 = np.pad(v, ((1, 0), (0, 0)), mode="constant")[:-1]
+        v_n1 = np.pad(v, ((1, 0), (0, 0)), mode="edge")[:-1]
 
         v_avg = (v + v_n1) / 2
         c_v = np.abs(v_avg) * tau / hy
@@ -131,7 +131,7 @@ class fd_solver:
 
         v_p2 = np.pad(u, ((0, 2), (0, 0)), mode="constant")[2:]
         v_p1 = np.pad(u, ((0, 1), (0, 0)), mode="constant")[1:]
-        v_n1 = np.pad(u, ((1, 0), (0, 0)), mode="constant")[:-1]
+        v_n1 = np.pad(u, ((1, 0), (0, 0)), mode="edge")[:-1]
 
         u_avg = (u_p1 + u) / 2
         c_u = np.abs(u_avg) * tau / hx
@@ -237,7 +237,7 @@ class fd_solver:
 
         s_p2 = np.pad(u, ((0, 2), (0, 0)), mode="constant")[2:]
         s_p1 = np.pad(u, ((0, 1), (0, 0)), mode="constant")[1:]
-        s_n1 = np.pad(u, ((1, 0), (0, 0)), mode="constant")[:-1]
+        s_n1 = np.pad(u, ((1, 0), (0, 0)), mode="edge")[:-1]
 
         u_avg = (u + u_n1) / 2
         c_u = np.abs(u_avg) * tau / hx
@@ -265,8 +265,9 @@ class fd_solver:
         u_n1 = np.pad(u, ((0, 0), (1, 0)), mode="constant")[:, :-1]
 
         s_p1 = np.pad(u, ((0, 1), (0, 0)), mode="constant")[1:]
-        s_n1 = np.pad(u, ((1, 0), (0, 0)), mode="constant")[:-1]
-        s_n2 = np.pad(u, ((2, 0), (0, 0)), mode="constant")[:-2]
+        s_n1 = np.pad(u, ((1, 0), (0, 0)), mode="edge")[:-1]
+        # TODO: check
+        s_n2 = np.pad(u, ((2, 0), (0, 0)), mode="edge")[:-2]
 
         u_avg = (u + u_n1) / 2
         c_u = np.abs(u_avg) * tau / hx
@@ -386,7 +387,7 @@ class fd_solver:
         v = np.copy(v_old)
 
         v_p1_x = np.pad(v, ((0, 1), (0, 0)), mode="constant")[1:]
-        v_n1_x = np.pad(v, ((1, 0), (0, 0)), mode="constant")[:-1]
+        v_n1_x = np.pad(v, ((1, 0), (0, 0)), mode="edge")[:-1]
 
         u_p1_y = np.pad(u, ((0, 0), (0, 1)), mode="constant")[:, 1:]
         u_n1_x = np.pad(u, ((1, 0), (0, 0)), mode="constant")[:-1]
@@ -424,7 +425,7 @@ class fd_solver:
         v = np.copy(v_old)
 
         s_p1_x = np.pad(s, ((0, 1), (0, 0)), mode="constant")[1:]
-        s_n1_x = np.pad(s, ((1, 0), (0, 0)), mode="constant")[:-1]
+        s_n1_x = np.pad(s, ((1, 0), (0, 0)), mode="edge")[:-1]
         s_p1_y = np.pad(s, ((0, 0), (0, 1)), mode="constant")[:, 1:]
         s_n1_y = np.pad(s, ((0, 0), (1, 0)), mode="constant")[:, :-1]
 

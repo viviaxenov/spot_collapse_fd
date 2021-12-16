@@ -44,6 +44,9 @@ def main():
         u, v, s, p = solver.step(u, v, s, p)
 
     plot_fields(u, v, s, p)
+    print(u.shape)
+    print(v.shape)
+    print(s.shape)
 
     return
 
