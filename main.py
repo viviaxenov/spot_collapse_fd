@@ -3,7 +3,7 @@ import argparse
 
 from numerical_scheme import fd_solver
 from config import *
-from utils import build_default_initial_conditions
+from utils import *
 
 
 def parse_args():
@@ -39,6 +39,11 @@ def main():
     hx, hy, u_0, v_0, p_0, s_0 = build_default_initial_conditions(nx, ny)
 
     solver = fd_solver(hx, hy, T, nt, Re, Fr, Sc)
+    u, v, s, p = u_0, v_0, s_0, p_0
+    for _ in range(solver.nt):
+        u, v, s, p = solver.step(u, v, s, p)
+
+    plot_fields(u, v, s, p)
 
     return
 

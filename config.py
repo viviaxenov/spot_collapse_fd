@@ -1,7 +1,7 @@
 import numpy as np
 
 # field of integration
-Y = 0.0
+Y = 5.0
 X = 15.0
 
 # spot parameters
@@ -16,7 +16,7 @@ T = 1.0
 
 g = 9.81  # acceleration of gravity
 rho_0 = 1.0
-Lambda = 10.0
+Lambda = 0.1
 N = 1.0
 Tb = 2 * np.pi / N
 

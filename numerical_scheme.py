@@ -1,26 +1,29 @@
 import numpy as np
 import math as m
 
-from config import poisson_solver_defaults
+from config import poisson_solver_defaults, C
 from PoissonSolver import PoissonProblem
 
 
 class fd_solver:
-    def __init__(self, hx, hy, T, nt, Re, Fr, Sc):
+    def __init__(self, hx, hy, T, nt, Re, Fr, Sc, C=C):
 
         self.hx = hx
         self.hy = hy
         self.T = T
         self.nt = nt
 
-        self.n_steps = self.T / float(self.nt)
+        self.tau = self.T / self.nt
 
         self.Re = Re
         self.Fr = Fr
         self.Sc = Sc
+        self.C = C
 
-    @staticmethod
-    def DU3(u):
+    def DU3(self, u):
+        tau = self.tau
+        hx = self.hx
+        hy = self.hy
 
         u_p2 = np.pad(u, ((0, 2), (0, 0)), mode="constant")[2:]
         u_p1 = np.pad(u, ((0, 1), (0, 0)), mode="constant")[1:]
@@ -41,8 +44,10 @@ class fd_solver:
 
         return u_avg * (switch_lh * msk + switch_rh * (1 - msk))
 
-    @staticmethod
-    def DU1(u):
+    def DU1(self, u):
+        tau = self.tau
+        hx = self.hx
+        hy = self.hy
 
         u_p1 = np.pad(u, ((0, 1), (0, 0)), mode="constant")[1:]
         u_n1 = np.pad(u, ((1, 0), (0, 0)), mode="constant")[:-1]
@@ -63,8 +68,10 @@ class fd_solver:
 
         return u_avg * (switch_lh * msk + switch_rh * (1 - msk))
 
-    @staticmethod
-    def DU4(u, v):
+    def DU4(self, u, v):
+        tau = self.tau
+        hx = self.hx
+        hy = self.hy
 
         u_p2 = np.pad(u, ((0, 0), (0, 2)), mode="constant")[:, 2:]
         u_p1 = np.pad(u, ((0, 0), (0, 1)), mode="constant")[:, 1:]
@@ -87,8 +94,10 @@ class fd_solver:
 
         return v_avg * (switch_lh * msk + switch_rh * (1 - msk))
 
-    @staticmethod
-    def DU2(u, v):
+    def DU2(self, u, v):
+        tau = self.tau
+        hx = self.hx
+        hy = self.hy
 
         u_p1 = np.pad(u, ((0, 0), (0, 1)), mode="constant")[:, 1:]
         u_n1 = np.pad(u, ((0, 0), (1, 0)), mode="constant")[:, :-1]
@@ -113,8 +122,10 @@ class fd_solver:
 
         return v_avg * (switch_lh * msk + switch_rh * (1 - msk))
 
-    @staticmethod
-    def DV3(u, v):
+    def DV3(self, u, v):
+        tau = self.tau
+        hx = self.hx
+        hy = self.hy
 
         u_p1 = np.pad(u, ((0, 0), (0, 1)), mode="constant")[:, 1:]
 
@@ -138,8 +149,10 @@ class fd_solver:
 
         return u_avg * (switch_lh * msk + switch_rh * (1 - msk))
 
-    @staticmethod
-    def DV1(u, v):
+    def DV1(self, u, v):
+        tau = self.tau
+        hx = self.hx
+        hy = self.hy
 
         u = np.pad(u, ((1, 0), (0, 0)), mode="constant")[1:]
         u_p1 = np.pad(u, ((0, 0), (0, 1)), mode="constant")[:, 1:]
@@ -164,8 +177,10 @@ class fd_solver:
 
         return u_avg * (switch_lh * msk + switch_rh * (1 - msk))
 
-    @staticmethod
-    def DV4(v):
+    def DV4(self, v):
+        tau = self.tau
+        hx = self.hx
+        hy = self.hy
 
         v_p2 = np.pad(v, ((0, 0), (0, 2)), mode="constant")[:, 2:]
         v_p1 = np.pad(v, ((0, 0), (0, 1)), mode="constant")[:, 1:]
@@ -187,8 +202,10 @@ class fd_solver:
 
         return v_avg * (switch_lh * msk + switch_rh * (1 - msk))
 
-    @staticmethod
-    def DV2(v):
+    def DV2(self, v):
+        tau = self.tau
+        hx = self.hx
+        hy = self.hy
 
         v_p1 = np.pad(v, ((0, 0), (0, 1)), mode="constant")[:, 1:]
         v_n1 = np.pad(v, ((0, 0), (1, 0)), mode="constant")[:, :-1]
@@ -211,8 +228,10 @@ class fd_solver:
 
         return v_avg * (switch_lh * msk + switch_rh * (1 - msk))
 
-    @staticmethod
-    def DS3(u, s):
+    def DS3(self, u, s):
+        tau = self.tau
+        hx = self.hx
+        hy = self.hy
 
         u_n1 = np.pad(u, ((0, 0), (1, 0)), mode="constant")[:, :-1]
 
@@ -237,8 +256,10 @@ class fd_solver:
 
         return u_avg * (switch_lh * msk + switch_rh * (1 - msk))
 
-    @staticmethod
-    def DS1(u, s):
+    def DS1(self, u, s):
+        tau = self.tau
+        hx = self.hx
+        hy = self.hy
 
         u = np.pad(u, ((1, 0), (0, 0)), mode="constant")[:-1]
         u_n1 = np.pad(u, ((0, 0), (1, 0)), mode="constant")[:, :-1]
@@ -264,8 +285,10 @@ class fd_solver:
 
         return u_avg * (switch_lh * msk + switch_rh * (1 - msk))
 
-    @staticmethod
-    def DS4(v, s):
+    def DS4(self, v, s):
+        tau = self.tau
+        hx = self.hx
+        hy = self.hy
 
         v_p1 = np.pad(v, ((0, 0), (0, 1)), mode="constant")[:, 1:]
 
@@ -289,16 +312,18 @@ class fd_solver:
 
         return v_avg * (switch_lh * msk + switch_rh * (1 - msk))
 
-    @staticmethod
-    def DS2(v_old, s_old):
-
-        v_n1 = np.pad(v, ((0, 0), (1, 0)), mode="constant")[:, :-1]
+    def DS2(self, v_old, s_old):
+        tau = self.tau
+        hx = self.hx
+        hy = self.hy
+        s = s_old.copy()
+        v_old_n1 = np.pad(v_old, ((0, 0), (1, 0)), mode="constant")[:, :-1]
 
         s_p1 = np.pad(s, ((0, 0), (0, 1)), mode="constant")[:, 1:]
         s_n1 = np.pad(s, ((0, 0), (1, 0)), mode="constant")[:, :-1]
         s_n2 = np.pad(s, ((0, 0), (2, 0)), mode="constant")[:, :-2]
 
-        v_avg = (v + v_n1) / 2
+        v_avg = (v_old + v_old_n1) / 2
         c_v = np.abs(v_avg) * tau / hx
 
         sign_value = v_avg * (s - s_n1) * 0.5 * (s_p1 - s - s_n1 + s_n2)
@@ -405,16 +430,18 @@ class fd_solver:
 
         s_ = (
             s
-            - tau / hx * (self.DS3(u_next, s) - self.DS1(u_next, s))
-            - tau / hy * (self.DS4(v_next, s) - self.DS2(v_next, s))
+            - tau / hx * (self.DS3(u_old, s) - self.DS1(u_old, s))
+            - tau / hy * (self.DS4(v_old, s) - self.DS2(v_old, s))
             + tau
             / (Sc * Re)
             * (
                 (s_p1_x - 2.0 * s + s_n1_x) / hx ** 2
                 + (s_p1_y - 2.0 * s + s_n1_y) / hy ** 2
             )
-            + tau * v_next / C
+            + tau * v_old / C
         )
+
+        return s_
 
     def div_tilde(self, u_tilde, v_tilde):
 
@@ -430,30 +457,28 @@ class fd_solver:
 
         return (u_p1_x - u_n1_x) / (2 * hx) + (v_p1_y - v_n1_y) / (2 * hy)
 
-    def step(self, u_old, v_old, s_old):
+    def step(self, u_old, v_old, s_old, p_old):
 
         hx = self.hx
         hy = self.hy
         tau = self.tau
 
         u_ = self.u_tilde(u_old, v_old)
-        v_ = self.v_tilde(u_old, v_old)
+        v_ = self.v_tilde(u_old, v_old, s_old)
 
-        p = self.solve_poisson()
+        rhs = self.div_tilde(u_, v_) / tau
 
-        u_next = u_ - tau / hx * (np.pad(p, ((0, 1), (0, 0)), mode="constant")[1:] - p)
-        v_next = v_ - tau / hy * (
-            np.pad(p, ((0, 0), (0, 1)), mode="constant")[:, 1:] - p
-        )
+        p = self.solve_poisson(p_old, rhs)
+
+        u_next = u_ - tau / hx * (np.pad(p, ((0, 1), (0, 0)), mode="edge")[1:, :] - p)
+        v_next = v_ - tau / hy * (np.pad(p, ((0, 0), (0, 1)), mode="edge")[:, 1:] - p)
 
         s_next = self.s_tilde(s_old, u_next, v_next)
 
-        return u_next, v_next, s_next
+        return u_next, v_next, s_next, p
 
-    def solve_poisson(self):
-        p = PoissonProblem(
-            p_init=self.p, rhs=self.div_tilde(u_, v_) / self.tau, hx=self.hx, hy=self.hy
-        )
+    def solve_poisson(self, p0, rhs):
+        p = PoissonProblem(p_init=p0, rhs=rhs, h_x=self.hx, h_y=self.hy)
         p.solve(**poisson_solver_defaults)
 
-        return p.get_solution
+        return p.get_solution()
