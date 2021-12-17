@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 from config import poisson_solver_defaults, C, X, Y
 from PoissonSolver import PoissonProblem
 
-# from evtk.hl import pointsToVTK
+import evtk
+from pyevtk.hl import pointsToVTK
 
 
 class fd_solver:
@@ -28,6 +29,9 @@ class fd_solver:
         self.hy = y[1] - y[0]
 
         xx, yy = np.meshgrid(x, y, indexing="ij")
+
+        self.xx_grid = xx
+        self.yy_grid = yy
 
         self.xx_cell = xx[:-1, :-1] + 0.5 * self.hx
         self.yy_cell = yy[:-1, :-1] + 0.5 * self.hy
@@ -514,4 +518,14 @@ class fd_solver:
         return p.get_solution()
 
     def dump_vtk(self, fname: str, u, v, s, p):
-        pass
+        nx, ny = self.xx_cell.shape
+        return pointsToVTK(
+            fname + "_cell_data",
+            self.xx_cell.flatten(),
+            self.yy_cell.flatten(),
+            np.zeros_like(self.xx_cell.flatten()),
+            data={
+                "salinity": s.flatten(),
+                "pressure": p.flatten(),
+            },
+        )

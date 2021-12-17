@@ -41,8 +41,12 @@ def main():
     u_0, v_0, p_0, s_0 = build_default_initial_conditions(solver)
     u, v, s, p = u_0, v_0, s_0, p_0
 
+    print(p.shape, solver.xx_cell.shape)
+
     for cur_iter in range(solver.nt):
         u, v, s, p = solver.step(u, v, s, p)
+        if cur_iter % 10 == 0:
+            solver.dump_vtk(f"output/{cur_iter:05d}", u, v, s, p)
 
     plot_fields(u, v, s, p)
 

@@ -134,3 +134,4 @@ dmypy.json
 # test script
 test.py
 
+output/
