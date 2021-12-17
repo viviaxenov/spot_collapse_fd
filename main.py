@@ -36,12 +36,12 @@ def main():
     nt = args["nt"]
     T = args["T"]
 
-    hx, hy, u_0, v_0, p_0, s_0 = build_default_initial_conditions(nx, ny)
+    solver = fd_solver(nx, ny, T, nt, Re, Fr, Sc)
 
-    solver = fd_solver(hx, hy, T, nt, Re, Fr, Sc)
+    u_0, v_0, p_0, s_0 = build_default_initial_conditions(solver)
     u, v, s, p = u_0, v_0, s_0, p_0
-    
-    for _ in range(solver.nt):
+
+    for cur_iter in range(solver.nt):
         u, v, s, p = solver.step(u, v, s, p)
 
     plot_fields(u, v, s, p)

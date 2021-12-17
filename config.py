@@ -13,10 +13,6 @@ R_0 = 1.0
 T = 1.0
 
 # other constants
-
-g = 9.81  # acceleration of gravity
-rho_0 = 1.0
-Lambda = 100.
 N = 1.0
 Tb = 2 * np.pi / N
 
@@ -28,4 +24,4 @@ Re = 100.0  # Reynolds number
 Fr = 0.1  # Froude number
 Sc = 709.2  # Schmidt number
 
-poisson_solver_defaults = {"max_iter": 5000, "batch_size": 7, "eps": 1e-7}
+poisson_solver_defaults = {"max_iter": 5000, "batch_size": 7, "eps": 1e-4}
