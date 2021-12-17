@@ -48,6 +48,7 @@ def main():
         if cur_iter % 10 == 0:
             solver.dump_vtk(f"output/{cur_iter:05d}", u, v, s, p)
 
+    solver.dump_vtk(f"output/{cur_iter:05d}", u, v, s, p)
     plot_fields(u, v, s, p)
 
     return

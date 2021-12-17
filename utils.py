@@ -35,8 +35,9 @@ def build_default_initial_conditions(solver: fd_solver):
 def plot_fields(u, v, s, p):
     # to do: divide by hx
     delta_s_x = s[1:, :] - s[:-1, :]
-    data = [u, v, p, s, delta_s_x]
-    labels = ["$u$", "$v$", "$p$", "$s$", r"$\frac{\partial s}{\partial x}$"]
+    delta_s_x_sign = np.sign(delta_s_x)
+    data = [u, v, p, s, delta_s_x, delta_s_x_sign]
+    labels = ["$u$", "$v$", "$p$", "$s$", r"$\frac{\partial s}{\partial x}$", r"$sign(\frac{\partial s}{\partial x}$)"]
     fig, axs = plt.subplots(nrows=3, ncols=2)
     axs = axs.flatten()
 

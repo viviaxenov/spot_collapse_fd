@@ -518,7 +518,10 @@ class fd_solver:
         return p.get_solution()
 
     def dump_vtk(self, fname: str, u, v, s, p):
-        nx, ny = self.xx_cell.shape
+        s_p1 = np.pad(s, [(0, 1), (0, 0)], mode='constant')[1:]
+
+        s_deriv = (s_p1 - s)/self.hx
+
         return pointsToVTK(
             fname + "_cell_data",
             self.xx_cell.flatten(),
@@ -526,6 +529,7 @@ class fd_solver:
             np.zeros_like(self.xx_cell.flatten()),
             data={
                 "salinity": s.flatten(),
+                "salinity_dx": s_deriv.flatten(),
                 "pressure": p.flatten(),
             },
         )
