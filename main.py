@@ -40,13 +40,11 @@ def main():
 
     solver = fd_solver(hx, hy, T, nt, Re, Fr, Sc)
     u, v, s, p = u_0, v_0, s_0, p_0
+    
     for _ in range(solver.nt):
         u, v, s, p = solver.step(u, v, s, p)
 
     plot_fields(u, v, s, p)
-    print(u.shape)
-    print(v.shape)
-    print(s.shape)
 
     return
 

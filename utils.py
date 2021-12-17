@@ -22,8 +22,8 @@ def build_default_initial_conditions(nx, ny):
     xx, yy = np.meshgrid(x_space, y_space)
 
     # initial velocity field is zero-valued
-    u_0_distr = np.zeros_like(xx)
-    v_0_distr = np.zeros_like(xx)
+    u_0_distr = np.zeros((xx.shape[0] + 1, xx.shape[1]))
+    v_0_distr = np.zeros((xx.shape[0], xx.shape[1] + 1))
 
     # define area where the spot is located
     spot_mask = (
@@ -40,13 +40,8 @@ def build_default_initial_conditions(nx, ny):
     p_0_distr = (
         -rho_0
         * g
-        * (yy * (1.0 - spot_mask) + (yy - 1.0 / Lambda / 2.0 * yy ** 2) * spot_mask)
+        * (yy * (spot_mask) + (yy - 1.0 / Lambda / 2.0 * yy ** 2) * (1. - spot_mask))
     )
-
-    # p_0_distr = -rho_0 * g * yy * spot_mask - rho_0 * g * (
-    #    yy - 1 / Lambda / 2 * yy ** 2
-    # ) * (1.0 - spot_mask)
-
     p_0_distr = p_0_distr / p_scale
 
     return (
