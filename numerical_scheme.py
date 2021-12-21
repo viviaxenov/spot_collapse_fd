@@ -337,7 +337,7 @@ class fd_solver:
         ) + (v_avg < 0) * (0.5 * (3.0 - c_v) * s_p1 - 0.5 * (1.0 - c_v) * s_p2)
 
         switch_rh = (
-            0.5 * (1.0 - tau / hx * v_avg) * s_p1 - 0.5 * (1.0 + tau / hx * v_avg) * s
+            0.5 * (1.0 - tau / hx * v_avg) * s_p1 + 0.5 * (1.0 + tau / hx * v_avg) * s
         )
 
         return v_avg * (switch_lh * msk + switch_rh * (1 - msk))
